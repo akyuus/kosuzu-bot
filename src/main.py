@@ -1,6 +1,6 @@
 import tweepy
 import psycopg2
-from kosuzubot import KosuzuBot
+from src.kosuzubot import KosuzuBot
 from decouple import config
 
 if __name__ == "__main__":

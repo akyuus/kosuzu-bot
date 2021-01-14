@@ -5,8 +5,7 @@ import psycopg2
 import sched
 import time
 import requests
-import utils
-
+import src.utils as utils
 
 class KosuzuBot(tweepy.StreamListener):
 
