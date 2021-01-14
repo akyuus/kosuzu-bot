@@ -6,6 +6,8 @@ import sched
 import time
 import requests
 import src.utils as utils
+from typing import Tuple
+from typing import List
 
 class KosuzuBot(tweepy.StreamListener):
 
@@ -14,7 +16,7 @@ class KosuzuBot(tweepy.StreamListener):
         self.__cursor = cursor
         self.scheduler = sched.scheduler(time.time, time.sleep)
 
-    def make_tweet(self, status: tweepy.Status = None):
+    def make_tweet(self, status: tweepy.Status = None) -> None:
         """This method constructs and posts a new tweet. I've configured it to post every 3 hours."""
         kosuzus, chapter = self.__getkosuzu()
         media_ids = []
@@ -57,7 +59,7 @@ class KosuzuBot(tweepy.StreamListener):
                 print("no foot scroll today")
         self.scheduler.enter(3600, 2, self.suzunaanfootscroll)
 
-    def __getkosuzu(self) -> tuple[list[str], int]:
+    def __getkosuzu(self) -> Tuple[List[str], int]:
         """This method grabs a random Kosuzu from the database. Returns a list of filenames."""
         random_query = 'SELECT * FROM images OFFSET floor(random() * (SELECT COUNT(*) FROM images)) LIMIT 1'
         series_query = 'SELECT * FROM images I, seriesinfo S WHERE I.name=%s AND I.id=S.id ORDER BY num'
