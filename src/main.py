@@ -1,6 +1,7 @@
 import tweepy
 import psycopg2
-from src.kosuzubot import KosuzuBot
+import sys
+from kosuzubot import KosuzuBot
 from decouple import config
 
 if __name__ == "__main__":
@@ -26,4 +27,8 @@ if __name__ == "__main__":
         bot.scheduler.enter(5, 2, bot.suzunaanfootscroll)
         bot.scheduler.run()
     except KeyboardInterrupt:
-        quit()
+        sys.exit()
+    except Exception as e:
+        with open("/home/pi/Desktop/kosuzubot/log.txt", 'r+a') as logfile:
+            logfile.write(e)
+        
