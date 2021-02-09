@@ -73,7 +73,7 @@ class KosuzuBot(tweepy.StreamListener):
         series_query = 'SELECT * FROM images I, seriesinfo S WHERE I.name=%s AND I.id=S.id ORDER BY num'
         
         if(len(self.chapters) < 1):
-            self.initialize_chapters()
+            self.initialize_chapters(self)
 
         random_chapter = random.choice(list(self.chapters))
         self.chapters.discard(random_chapter)
