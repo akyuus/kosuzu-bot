@@ -5,6 +5,7 @@ import psycopg2
 import sched
 import time
 import requests
+import random
 import src.utils as utils
 from typing import Tuple
 from typing import List
@@ -15,6 +16,13 @@ class KosuzuBot(tweepy.StreamListener):
         self.api = api
         self.__cursor = cursor
         self.scheduler = sched.scheduler(time.time, time.sleep)
+        self.chapters = set()
+        self.initialize_chapters(self)
+
+    def initialize_chapters(self) -> None:
+        self.__cursor.execute("select max(chapter) from images")
+        max = self.__cursor.fetchone()[0]
+        self.chapters = set(range(1, max+1))
 
     def make_tweet(self, status: tweepy.Status = None) -> None:
         """This method constructs and posts a new tweet. I've configured it to post every 3 hours."""
@@ -61,10 +69,15 @@ class KosuzuBot(tweepy.StreamListener):
 
     def __getkosuzu(self) -> Tuple[List[str], int]:
         """This method grabs a random Kosuzu from the database. Returns a list of filenames."""
-        random_query = 'SELECT * FROM images OFFSET floor(random() * (SELECT COUNT(*) FROM images)) LIMIT 1'
+        random_query = 'SELECT * FROM images WHERE chapter=%s LIMIT 1'
         series_query = 'SELECT * FROM images I, seriesinfo S WHERE I.name=%s AND I.id=S.id ORDER BY num'
+        
+        if(len(self.chapters) < 1):
+            self.initialize_chapters()
 
-        self.__cursor.execute(random_query)
+        random_chapter = random.choice(list(self.chapters))
+        self.chapters.discard(random_chapter)
+        self.__cursor.execute(random_query, random_chapter)
         row = self.__cursor.fetchone()
         chapter = row[3]
         kosuzus = []

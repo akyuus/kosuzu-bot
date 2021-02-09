@@ -17,14 +17,12 @@ if __name__ == "__main__":
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth, wait_on_rate_limit=True)
+
     bot = KosuzuBot(api, cursor)
 
     try:
         myStream = tweepy.Stream(auth=api.auth, listener=bot)
         myStream.filter(track=['@KosuzuBot'])
-        bot.scheduler.enter(5, 1, bot.make_tweet)
-        bot.scheduler.enter(5, 2, bot.suzunaanfootscroll)
-        bot.scheduler.run()
     except KeyboardInterrupt:
         sys.exit()
     except Exception as e:
