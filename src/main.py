@@ -20,8 +20,6 @@ if __name__ == "__main__":
     bot = KosuzuBot(api, cursor)
 
     try:
-        myStream = tweepy.Stream(auth=api.auth, listener=bot)
-        myStream.filter(track=['@KosuzuBot'])
         bot.scheduler.enter(5, 1, bot.make_tweet)
         bot.scheduler.enter(5, 2, bot.suzunaanfootscroll)
         bot.scheduler.run()

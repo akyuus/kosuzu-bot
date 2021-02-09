@@ -6,7 +6,7 @@ import sched
 import time
 import requests
 import random
-import src.utils as utils
+import utils as utils
 from typing import Tuple
 from typing import List
 
@@ -77,7 +77,9 @@ class KosuzuBot(tweepy.StreamListener):
 
         random_chapter = random.choice(list(self.chapters))
         self.chapters.discard(random_chapter)
-        self.__cursor.execute(random_query, random_chapter)
+        print(f"Discarding {random_chapter}...")
+        print(f"Chapters left:\n{self.chapters}")
+        self.__cursor.execute(random_query, [random_chapter])
         row = self.__cursor.fetchone()
         chapter = row[3]
         kosuzus = []
