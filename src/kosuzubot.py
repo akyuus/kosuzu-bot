@@ -17,7 +17,16 @@ class KosuzuBot(tweepy.StreamListener):
         self.__cursor = cursor
         self.scheduler = sched.scheduler(time.time, time.sleep)
         self.chapters = set()
+        self.stream = tweepy.Stream(auth=self.api.auth, listener=self)
+        self.stream.filter(track=['@KosuzuBot'], is_async=True)
         self.initialize_chapters()
+
+    def checkStream(self) -> None:
+        if not self.stream.running:
+            del self.stream
+            self.stream = tweepy.Stream(auth=self.api.auth, listener=self)
+            self.stream.filter(track=['@KosuzuBot'], is_async=True)
+        self.scheduler.enter(10, 3, self.checkStream)
 
     def initialize_chapters(self) -> None:
         self.__cursor.execute("select max(chapter) from images")

@@ -1,6 +1,7 @@
 import tweepy
 import psycopg2
 import sys
+import utils
 from kosuzubot import KosuzuBot
 from decouple import config
 
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     try:
         bot.scheduler.enter(5, 1, bot.make_tweet)
         bot.scheduler.enter(5, 2, bot.suzunaanfootscroll)
+        bot.scheduler.enter(5, 3, bot.checkStream)
         bot.scheduler.run()
     except KeyboardInterrupt:
         sys.exit()
