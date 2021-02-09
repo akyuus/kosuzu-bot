@@ -17,7 +17,7 @@ class KosuzuBot(tweepy.StreamListener):
         self.__cursor = cursor
         self.scheduler = sched.scheduler(time.time, time.sleep)
         self.chapters = set()
-        self.initialize_chapters(self)
+        self.initialize_chapters()
 
     def initialize_chapters(self) -> None:
         self.__cursor.execute("select max(chapter) from images")
@@ -73,7 +73,7 @@ class KosuzuBot(tweepy.StreamListener):
         series_query = 'SELECT * FROM images I, seriesinfo S WHERE I.name=%s AND I.id=S.id ORDER BY num'
         
         if(len(self.chapters) < 1):
-            self.initialize_chapters(self)
+            self.initialize_chapters()
 
         random_chapter = random.choice(list(self.chapters))
         self.chapters.discard(random_chapter)
