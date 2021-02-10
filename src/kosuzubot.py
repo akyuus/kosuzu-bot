@@ -55,8 +55,8 @@ class KosuzuBot(tweepy.StreamListener):
         else:
             self.api.update_status(status=tweet_text, media_ids=media_ids, in_reply_to_status_id=status.id)
 
-    def on_status(self, status) -> None:
-        if not utils.checkreplychain(status, self.api):
+    def on_status(self, status: tweepy.Status) -> None:
+        if not utils.checkreplychain(status, self.api) or hasattr(status, "retweeted_status"):
             return
         else:
             self.make_tweet(status)
